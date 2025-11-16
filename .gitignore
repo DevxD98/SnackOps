@@ -1,0 +1,15 @@
+# Add .env to gitignore
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+.ipynb_checkpoints/
+*.log
+.DS_Store

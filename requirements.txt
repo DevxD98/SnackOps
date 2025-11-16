@@ -1,0 +1,7 @@
+google-generativeai
+pandas
+numpy
+pillow
+opencv-python
+gradio
+python-dotenv
