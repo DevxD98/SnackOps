@@ -136,7 +136,7 @@ def _score_recipes(
     available_ingredients: List[str],
     max_missing: int
 ) -> List[Dict[str, Any]]:
-    """Score recipes based on ingredient matching"""
+    """Score recipes based on ingredient matching with fuzzy matching"""
     scored_recipes = []
     
     # Normalize available ingredients
@@ -147,9 +147,16 @@ def _score_recipes(
         required_ingredients = _parse_ingredients(recipe.get('ingredients', ''))
         required_set = set(ing.lower().strip() for ing in required_ingredients)
         
-        # Calculate matches and missing
-        matched = required_set.intersection(available_set)
-        missing = required_set.difference(available_set)
+        # Calculate matches using fuzzy matching
+        matched = set()
+        for req_ing in required_set:
+            for avail_ing in available_set:
+                # Check if either ingredient contains the other (fuzzy match)
+                if req_ing in avail_ing or avail_ing in req_ing:
+                    matched.add(req_ing)
+                    break
+        
+        missing = required_set.difference(matched)
         
         # Skip if too many missing ingredients
         if len(missing) > max_missing:
@@ -161,13 +168,17 @@ def _score_recipes(
         else:
             match_percentage = 0
         
+        # Bonus points for having more matched ingredients
+        bonus = len(matched) * 5  # 5% bonus per matched ingredient
+        final_score = min(match_percentage + bonus, 100)
+        
         scored_recipes.append({
             "name": recipe.get('name', 'Unknown'),
             "cuisine": recipe.get('cuisine', 'Unknown'),
             "ingredients": required_ingredients,
             "matched_ingredients": list(matched),
             "missing_ingredients": list(missing),
-            "match_score": round(match_percentage, 1),
+            "match_score": round(final_score, 1),
             "match_count": len(matched),
             "missing_count": len(missing),
             "calories": recipe.get('calories', 0),
