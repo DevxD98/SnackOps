@@ -1,0 +1,65 @@
+# ChefByte ADK Agent Configuration
+
+agent:
+  name: "ChefByte"
+  description: "AI meal planning agent for Indian households using vision, voice, and text"
+  model: "gemini-2.5-flash"
+  temperature: 0.7
+  max_tokens: 2048
+
+# Tool configuration
+tools:
+  - vision_tool
+  - recipe_search
+  - nutrition_estimator
+  - ingredient_normalizer
+  - meal_planner
+
+# Memory configuration
+memory:
+  type: "conversation"
+  max_history: 10
+  store_intermediate_steps: true
+
+# Multi-modal settings
+multimodal:
+  vision:
+    enabled: true
+    model: "gemini-2.5-flash"
+    max_image_size: 4096
+  voice:
+    enabled: true
+    languages: ["en-IN", "hi-IN"] # English and Hindi
+  text:
+    enabled: true
+
+# Indian household optimizations
+indian_config:
+  default_cuisine: "indian"
+  spice_profiles: true
+  regional_recipes:
+    ["punjabi", "south_indian", "bengali", "gujarati", "maharashtrian"]
+  ingredient_aliases:
+    - ["coriander", "dhania"]
+    - ["turmeric", "haldi"]
+    - ["cumin", "jeera"]
+    - ["mustard_seeds", "rai"]
+
+# Agent behavior
+behavior:
+  reasoning_style: "react" # ADK's built-in ReAct
+  max_iterations: 10
+  verbose: true
+  stream_output: true
+
+# Dietary constraints support
+dietary_constraints:
+  supported:
+    - "vegetarian"
+    - "vegan"
+    - "gluten_free"
+    - "dairy_free"
+    - "jain"
+    - "halal"
+    - "low_carb"
+    - "high_protein"

@@ -1,0 +1,30 @@
+# ChefByte - AI Meal Planning Agent
+# Powered by Google ADK & Gemini
+
+# === Core ADK Dependencies ===
+google-adk==1.18.0
+google-generativeai>=0.8.3
+
+# === Data Processing ===
+pandas>=2.0.0
+numpy>=1.24.0
+
+# === Image Processing ===
+pillow>=10.0.0
+
+# === Web UI ===
+gradio>=5.0.0
+
+# === Jupyter Notebook Support ===
+ipykernel>=6.0.0
+jupyter>=1.0.0
+
+# === Configuration ===
+python-dotenv>=1.0.0
+pyyaml>=6.0.0
+
+# === Additional Utilities ===
+pydantic>=2.0.0
+aiofiles>=23.0.0
+asyncio>=3.4.3
+
