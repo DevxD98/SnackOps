@@ -1,0 +1,30 @@
+{
+  "ingredients": [
+    "chicken",
+    "garlic",
+    "ginger",
+    "onion",
+    "rice",
+    "spinach",
+    "tomato",
+    "yogurt"
+  ],
+  "last_updated": "2025-11-18T14:24:39.425889",
+  "scan_history": [
+    {
+      "timestamp": "2025-11-18T14:24:39.425907",
+      "ingredients": [
+        "tomato",
+        "onion",
+        "garlic",
+        "ginger",
+        "chicken",
+        "rice",
+        "spinach",
+        "yogurt"
+      ],
+      "source": "manual",
+      "count": 8
+    }
+  ]
+}

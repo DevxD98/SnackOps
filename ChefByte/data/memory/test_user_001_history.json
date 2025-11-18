@@ -1,0 +1,23 @@
+{
+  "cooked_recipes": [
+    {
+      "recipe_name": "Palak Paneer",
+      "timestamp": "2025-11-18T14:24:39.426537",
+      "rating": 5,
+      "notes": ""
+    },
+    {
+      "recipe_name": "Chole Bhature",
+      "timestamp": "2025-11-18T14:24:39.426660",
+      "rating": 4,
+      "notes": ""
+    }
+  ],
+  "favorite_recipes": [
+    "Palak Paneer"
+  ],
+  "disliked_recipes": [
+    "Bitter Gourd Curry"
+  ],
+  "meal_plans": []
+}

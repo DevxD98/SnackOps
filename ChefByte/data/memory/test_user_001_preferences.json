@@ -1,0 +1,10 @@
+{
+  "dietary_constraints": [
+    "vegetarian",
+    "gluten_free"
+  ],
+  "cuisine_preferences": [],
+  "calorie_target": 1800,
+  "allergies": [],
+  "default_servings": 4
+}
