@@ -1,39 +1,22 @@
-import { useState } from 'react';
-import { Header } from './components/Header';
-import { InputSection } from './components/InputSection';
-import { MealPlanResults } from './components/MealPlanResults';
-import { PreferencesModal } from './components/PreferencesModal';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Layout } from './components/Layout';
+import { ChatPage } from './pages/ChatPage';
+import { FridgePage } from './pages/FridgePage';
+import { PlannerPage } from './pages/PlannerPage';
+import { GroceryPage } from './pages/GroceryPage';
 
 function App() {
-  const [showPreferences, setShowPreferences] = useState(false);
-  const [preferences, setPreferences] = useState({
-    dietaryRestrictions: [] as string[],
-    budget: 'medium',
-    cookingTime: 'medium',
-  });
-  const [mealPlan, setMealPlan] = useState(null);
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#F7F4EC' }}>
-      <Header onOpenPreferences={() => setShowPreferences(true)} />
-
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
-        <InputSection
-          preferences={preferences}
-          onGenerateMealPlan={setMealPlan}
-        />
-
-        {mealPlan && <MealPlanResults mealPlan={mealPlan} />}
-      </main>
-
-      {showPreferences && (
-        <PreferencesModal
-          preferences={preferences}
-          onClose={() => setShowPreferences(false)}
-          onSave={setPreferences}
-        />
-      )}
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<ChatPage />} />
+          <Route path="/fridge" element={<FridgePage />} />
+          <Route path="/planner" element={<PlannerPage />} />
+          <Route path="/grocery" element={<GroceryPage />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 

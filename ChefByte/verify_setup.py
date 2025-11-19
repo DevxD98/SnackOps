@@ -39,7 +39,7 @@ try:
     agent = ChefByteADKAgent()
     print(f"  ✓ Agent created successfully!")
     print(f"    - Name: {agent.config['agent']['name']}")
-    print(f"    - Tools: {len(agent.agent.tools)}")
+    print(f"    - Tools: {len(agent.tools)}")
 except Exception as e:
     print(f"  ✗ Agent creation failed: {e}")
     import traceback

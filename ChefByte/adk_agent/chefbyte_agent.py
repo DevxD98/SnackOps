@@ -15,7 +15,8 @@ import asyncio
 from adk_agent.tools import (
     vision_tool,
     recipe_search_tool,
-    nutrition_estimator_tool
+    nutrition_estimator_tool,
+    grocery_list_tool
 )
 
 # Import persistent memory
@@ -91,12 +92,14 @@ class ChefByteADKAgent:
         from adk_agent.tools.vision_tool import extract_ingredients_from_image
         from adk_agent.tools.recipe_search_adk import search_recipes
         from adk_agent.tools.nutrition_estimator_adk import estimate_nutrition
+        from adk_agent.tools.grocery_list_tool import generate_grocery_list
         
         # Store function references
         self.tool_functions = {
             'extract_ingredients_from_image': extract_ingredients_from_image,
             'search_recipes': self._enhanced_search_recipes,  # Wrap with enhancement
-            'estimate_nutrition': estimate_nutrition
+            'estimate_nutrition': estimate_nutrition,
+            'generate_grocery_list': generate_grocery_list
         }
         
         # Store original search function
@@ -144,6 +147,29 @@ class ChefByteADKAgent:
                                 'protein_target': types.Schema(type=types.Type.INTEGER, description='Target protein in grams')
                             },
                             required=['recipes', 'meal_count']
+                        )
+                    )
+                ]
+            ),
+            types.Tool(
+                function_declarations=[
+                    types.FunctionDeclaration(
+                        name='generate_grocery_list',
+                        description='Generate a grocery list from items or meal plan',
+                        parameters=types.Schema(
+                            type=types.Type.OBJECT,
+                            properties={
+                                'items': types.Schema(
+                                    type=types.Type.ARRAY,
+                                    items=types.Schema(type=types.Type.STRING),
+                                    description='List of items to buy'
+                                ),
+                                'meal_plan_context': types.Schema(
+                                    type=types.Type.STRING,
+                                    description='Context about the meal plan'
+                                )
+                            },
+                            required=['items']
                         )
                     )
                 ]
