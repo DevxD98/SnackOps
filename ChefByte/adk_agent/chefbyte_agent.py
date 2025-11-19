@@ -95,9 +95,12 @@ class ChefByteADKAgent:
         # Store function references
         self.tool_functions = {
             'extract_ingredients_from_image': extract_ingredients_from_image,
-            'search_recipes': search_recipes,
+            'search_recipes': self._enhanced_search_recipes,  # Wrap with enhancement
             'estimate_nutrition': estimate_nutrition
         }
+        
+        # Store original search function
+        self._original_search_recipes = search_recipes
         
         # Return tool declarations for Gemini
         return [
@@ -117,14 +120,14 @@ class ChefByteADKAgent:
                     ),
                     types.FunctionDeclaration(
                         name='search_recipes',
-                        description='Search for recipes matching available ingredients with dietary constraints',
+                        description='Search for recipes matching available ingredients. ALWAYS call this when user mentions ingredients or asks for recipe suggestions, even with just 1-2 ingredients. The system automatically adjusts flexibility based on ingredient count.',
                         parameters=types.Schema(
                             type=types.Type.OBJECT,
                             properties={
                                 'available_ingredients': types.Schema(type=types.Type.STRING, description='Comma-separated list of available ingredients'),
                                 'dietary_constraints': types.Schema(type=types.Type.STRING, description='Dietary constraints (e.g., vegetarian, vegan)'),
-                                'max_missing': types.Schema(type=types.Type.INTEGER, description='Maximum missing ingredients allowed'),
-                                'cuisine_type': types.Schema(type=types.Type.STRING, description='Preferred cuisine type')
+                                'max_missing': types.Schema(type=types.Type.INTEGER, description='Maximum missing ingredients allowed (will be auto-adjusted for few ingredients)'),
+                                'cuisine_type': types.Schema(type=types.Type.STRING, description='Preferred cuisine type (e.g., indian, punjabi, south_indian)')
                             },
                             required=['available_ingredients']
                         )
@@ -438,6 +441,40 @@ Please:
 4. Provide a complete meal plan with reasoning
 """
         return self.run(query)
+    
+    def _enhanced_search_recipes(self, available_ingredients, dietary_constraints=None, max_missing=2, cuisine_type=None):
+        """
+        Enhanced recipe search that automatically adjusts max_missing based on ingredient count.
+        Makes the agent more flexible when user has limited ingredients.
+        """
+        # Parse ingredients if it's a string
+        if isinstance(available_ingredients, str):
+            ingredients_list = [i.strip() for i in available_ingredients.split(',') if i.strip()]
+        else:
+            ingredients_list = available_ingredients
+        
+        ingredient_count = len(ingredients_list)
+        
+        # Adjust max_missing based on how many ingredients user has
+        if ingredient_count <= 3:
+            # Very few ingredients - be very flexible
+            adjusted_max_missing = 8
+            print(f"🔍 User has only {ingredient_count} ingredients, searching with max_missing={adjusted_max_missing} for flexibility")
+        elif ingredient_count <= 5:
+            # Few ingredients - be flexible
+            adjusted_max_missing = 6
+            print(f"🔍 User has {ingredient_count} ingredients, searching with max_missing={adjusted_max_missing}")
+        else:
+            # Use provided max_missing
+            adjusted_max_missing = max_missing
+        
+        # Call original search function with adjusted parameters
+        return self._original_search_recipes(
+            available_ingredients=ingredients_list,
+            dietary_constraints=dietary_constraints,
+            max_missing=adjusted_max_missing,
+            cuisine_type=cuisine_type
+        )
     
     
     def _update_memory_from_tool(self, tool_name: str, args: Dict, result: Any):
