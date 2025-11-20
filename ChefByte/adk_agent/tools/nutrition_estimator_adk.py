@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 from google.adk.tools import FunctionTool
 import pandas as pd
 from typing import Dict, List, Any, Optional
+from difflib import get_close_matches
 
 
 def estimate_nutrition(
@@ -40,15 +41,15 @@ def estimate_nutrition(
         - meal_count: Number of meals selected
     """
     try:
-        # Get nutrition database path
-        nutrition_db_path = os.path.join(
+        # Get cleaned ingredients database path (9,318 ingredients with precise nutrition)
+        ingredients_db_path = os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
             "data",
-            "nutrition.csv"
+            "cleaned_ingredients.csv"
         )
         
-        # Load nutrition database
-        nutrition_db = _load_nutrition_db(nutrition_db_path)
+        # Load precise ingredient nutrition database
+        nutrition_db = _load_ingredient_nutrition_db(ingredients_db_path)
         
         # Calculate nutrition for each recipe
         recipes_with_nutrition = []
@@ -92,13 +93,19 @@ def estimate_nutrition(
         }
 
 
-def _load_nutrition_db(nutrition_db_path: str) -> pd.DataFrame:
-    """Load nutrition database"""
+def _load_ingredient_nutrition_db(db_path: str) -> pd.DataFrame:
+    """Load cleaned ingredients nutrition database with 9,318 ingredients"""
     try:
-        df = pd.read_csv(nutrition_db_path)
+        df = pd.read_csv(db_path)
+        # Normalize ingredient names for matching
+        df['ingredient_lower'] = df['Descrip'].str.lower().str.strip()
+        print(f"✓ Loaded {len(df)} ingredients with precise nutrition data")
         return df
     except FileNotFoundError:
-        print(f"⚠ Nutrition database not found at {nutrition_db_path}")
+        print(f"⚠ Ingredient nutrition database not found at {db_path}")
+        return pd.DataFrame()
+    except Exception as e:
+        print(f"⚠ Error loading nutrition database: {e}")
         return pd.DataFrame()
 
 
@@ -118,33 +125,66 @@ def _estimate_recipe_nutrition(
             'source': 'recipe_data'
         }
     
-    # Otherwise, estimate from ingredients
+    # Otherwise, estimate from ingredients using precise database
     total_calories = 0
     total_protein = 0
     total_carbs = 0
     total_fat = 0
     total_fiber = 0
+    matched_count = 0
     
     ingredients = recipe.get('ingredients', [])
     if isinstance(ingredients, str):
         ingredients = [ing.strip() for ing in ingredients.split(',')]
     
+    # Create lookup dictionary for faster fuzzy matching
+    if not nutrition_db.empty and 'ingredient_lower' in nutrition_db.columns:
+        ingredient_names = nutrition_db['ingredient_lower'].tolist()
+    else:
+        ingredient_names = []
+    
     for ingredient in ingredients:
         ingredient_lower = ingredient.lower().strip()
         
-        # Look up in nutrition database
-        match = nutrition_db[
-            nutrition_db['ingredient'].str.lower().str.contains(ingredient_lower, na=False)
+        # Try exact match first
+        exact_match = nutrition_db[
+            nutrition_db['ingredient_lower'] == ingredient_lower
         ]
         
-        if not match.empty:
-            # Use first match (assuming 100g serving)
-            row = match.iloc[0]
-            total_calories += row.get('calories_per_100g', 0)
-            total_protein += row.get('protein_per_100g', 0)
-            total_carbs += row.get('carbs_per_100g', 0)
-            total_fat += row.get('fat_per_100g', 0)
-            total_fiber += row.get('fiber_per_100g', 0)
+        if not exact_match.empty:
+            row = exact_match.iloc[0]
+            # Assume 100g serving per ingredient
+            total_calories += row.get('Energy_kcal', 0)
+            total_protein += row.get('Protein_g', 0)
+            total_carbs += row.get('Carb_g', 0)
+            total_fat += row.get('Fat_g', 0)
+            total_fiber += row.get('Fiber_g', 0)
+            matched_count += 1
+        else:
+            # Try fuzzy matching for ingredient variations
+            fuzzy_matches = get_close_matches(
+                ingredient_lower,
+                ingredient_names,
+                n=1,
+                cutoff=0.6
+            )
+            
+            if fuzzy_matches:
+                match = nutrition_db[
+                    nutrition_db['ingredient_lower'] == fuzzy_matches[0]
+                ]
+                if not match.empty:
+                    row = match.iloc[0]
+                    total_calories += row.get('Energy_kcal', 0)
+                    total_protein += row.get('Protein_g', 0)
+                    total_carbs += row.get('Carb_g', 0)
+                    total_fat += row.get('Fat_g', 0)
+                    total_fiber += row.get('Fiber_g', 0)
+                    matched_count += 1
+    
+    # Calculate match confidence
+    total_ingredients = len(ingredients) if ingredients else 1
+    match_confidence = (matched_count / total_ingredients) * 100 if total_ingredients > 0 else 0
     
     return {
         'calories': round(total_calories, 1),
@@ -152,7 +192,10 @@ def _estimate_recipe_nutrition(
         'carbs_g': round(total_carbs, 1),
         'fat_g': round(total_fat, 1),
         'fiber_g': round(total_fiber, 1),
-        'source': 'estimated'
+        'source': 'precise_database',
+        'matched_ingredients': matched_count,
+        'total_ingredients': total_ingredients,
+        'confidence': round(match_confidence, 1)
     }
 
 
