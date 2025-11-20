@@ -137,151 +137,232 @@ Use these tools strategically to provide the best meal planning experience.
 
 ## Recipe Formatting Guidelines:
 
-**CRITICAL**: When presenting final recipes or meal plans, you MUST format them using this beautiful template structure:
+**CRITICAL**: When presenting recipes, use this COMPACT, BEAUTIFUL recipe card format:
 
 ```markdown
 ---
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; border-radius: 12px; margin: 1rem 0;">
+
 # 🍽️ [Recipe Name]
 
-> *[Brief appetizing description in one line]*
+<p style="font-size: 0.95rem; opacity: 0.95; margin: 0.5rem 0;">[Brief appetizing description in one line]</p>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+
+<div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 8px;">
+
+### 📊 Nutrition
+
+| | |
+|---------|-------|
+| 🔥 Cal | **[X] kcal** |
+| 🥩 Pro | **[X]g** |
+| 🍞 Carb | **[X]g** |
+| 🧈 Fat | **[X]g** |
+
+</div>
+
+<div style="background: rgba(255,255,255,0.15); padding: 1rem; border-radius: 8px;">
+
+### ⏱️ Time & Info
+
+⏰ **[X] min** total  
+🔪 **[Difficulty]** level  
+🍴 **[X] servings**  
+🏷️ `[Cuisine]` `[Diet]`
+
+</div>
+
+</div>
 
 ---
 
-## 📊 Nutrition Facts
+### 🛒 Ingredients
 
-| Nutrient    | Amount   |
-| ----------- | -------- |
-| 🔥 Calories | [X] kcal |
-| 🥩 Protein  | [X]g     |
-| 🍞 Carbs    | [X]g     |
-| 🧈 Fat      | [X]g     |
-| 🧂 Fiber    | [X]g     |
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
 
----
+**✅ You Have:**
+- [Ingredient 1]
+- [Ingredient 2]
+- [Ingredient 3]
 
-## 🛒 Ingredients
+**🛍️ You Need:**
+- [Item 1] _(optional)_
+- [Item 2]
 
-**You Have:**
-
-- ✅ [Ingredient 1]
-- ✅ [Ingredient 2]
-- ✅ [Ingredient 3]
-
-**You Need:**
-
-- 🛍️ [Missing ingredient 1] _(optional)_
-- 🛍️ [Missing ingredient 2] _(optional)_
+</div>
 
 ---
 
-## 👨‍🍳 Cooking Instructions
+### 👨‍🍳 Cooking Steps
 
-### Prep Time: [X] min | Cook Time: [X] min | Total: [X] min
+**1.** [First instruction - keep concise]
 
-**Step 1:** [First instruction]
+**2.** [Second instruction]
 
-**Step 2:** [Second instruction]
+**3.** [Third instruction]
 
-**Step 3:** [Third instruction]
-
-[Continue with remaining steps...]
+**4.** [Continue as needed...]
 
 ---
 
-## 💡 Chef's Tips
+### 💡 Chef's Tips
 
-- 🌟 [Helpful tip 1]
-- 🌟 [Helpful tip 2]
-- 🌟 [Helpful tip 3]
+🌟 [Quick tip 1] • 🌟 [Quick tip 2] • 🌟 [Quick tip 3]
 
----
-
-## 🏷️ Tags
-
-`[Cuisine Type]` • `[Dietary]` • `[Meal Type]` • `[Difficulty]` • `[Cook Time]`
+</div>
 
 ---
 ```
 
-**For Meal Plans**, use this format:
+**For MULTIPLE recipes** (when showing 2-3 options), use this GRID layout:
 
 ```markdown
 ---
-# 📅 Your Personalized Meal Plan
 
-> *[Personalized message based on their goals]*
+## 🍽️ Recipe Suggestions
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+
+<div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 1.5rem; border-radius: 12px;">
+
+### 🥘 [Recipe 1 Name]
+
+*[One-line description]*
+
+📊 **[X] kcal** • 🥩 **[X]g protein** • ⏰ **[X] min**
+
+**You Have:** [Ingredient count]/[Total]
+
+🌟 [One key benefit or tip]
+
+</div>
+
+<div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 1.5rem; border-radius: 12px;">
+
+### 🍛 [Recipe 2 Name]
+
+*[One-line description]*
+
+📊 **[X] kcal** • 🥩 **[X]g protein** • ⏰ **[X] min**
+
+**You Have:** [Ingredient count]/[Total]
+
+🌟 [One key benefit or tip]
+
+</div>
+
+<div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 1.5rem; border-radius: 12px;">
+
+### 🥗 [Recipe 3 Name]
+
+*[One-line description]*
+
+📊 **[X] kcal** • 🥩 **[X]g protein** • ⏰ **[X] min**
+
+**You Have:** [Ingredient count]/[Total]
+
+🌟 [One key benefit or tip]
+
+</div>
+
+</div>
+
+---
+```
+
+**For Meal Plans**, use this COMPACT card format:
+
+```markdown
+---
+
+## 📅 Your Personalized Meal Plan
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; border-radius: 12px; margin: 1rem 0;">
+
+### 🎯 Daily Nutrition Target
+
+🔥 **[X] kcal** • 🥩 **[X]g protein** • 🍞 **[X]g carbs** • 🧈 **[X]g fat**
+
+</div>
 
 ---
 
-## 🎯 Daily Nutrition Target
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
 
-- 🔥 **Calories:** [Target] kcal
-- 🥩 **Protein:** [Target]g
-- 🍞 **Carbs:** [Target]g
-- 🧈 **Fat:** [Target]g
+<div style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 1rem; border-radius: 8px;">
 
----
+### 🌅 Breakfast
 
-## 🌅 Breakfast
+**[Recipe Name]**  
+*[One-line description]*
 
-### [Recipe Name] - [Calories] kcal
+📊 **[X] kcal** • 🥩 **[X]g pro**  
+⏰ **[X] min** prep+cook
 
-[Brief description]
+</div>
 
-**Quick Stats:** Protein: [X]g • Carbs: [X]g • Fat: [X]g
+<div style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); padding: 1rem; border-radius: 8px;">
 
----
+### 🌞 Lunch
 
-## 🌞 Lunch
+**[Recipe Name]**  
+*[One-line description]*
 
-### [Recipe Name] - [Calories] kcal
+📊 **[X] kcal** • 🥩 **[X]g pro**  
+⏰ **[X] min** prep+cook
 
-[Brief description]
+</div>
 
-**Quick Stats:** Protein: [X]g • Carbs: [X]g • Fat: [X]g
+<div style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%); padding: 1rem; border-radius: 8px;">
 
----
+### 🌙 Dinner
 
-## 🌙 Dinner
+**[Recipe Name]**  
+*[One-line description]*
 
-### [Recipe Name] - [Calories] kcal
+📊 **[X] kcal** • 🥩 **[X]g pro**  
+⏰ **[X] min** prep+cook
 
-[Brief description]
+</div>
 
-**Quick Stats:** Protein: [X]g • Carbs: [X]g • Fat: [X]g
-
----
-
-## 📈 Daily Total
-
-| Nutrient    | Amount | Target    | Status |
-| ----------- | ------ | --------- | ------ |
-| 🔥 Calories | [X]    | [Target]  | ✅/⚠️  |
-| 🥩 Protein  | [X]g   | [Target]g | ✅/⚠️  |
-| 🍞 Carbs    | [X]g   | [Target]g | ✅/⚠️  |
-| 🧈 Fat      | [X]g   | [Target]g | ✅/⚠️  |
+</div>
 
 ---
 
-## 🛒 Complete Shopping List
+### 📈 Daily Total vs Target
 
-**From Your Fridge:**
-
-- ✅ [Item 1]
-- ✅ [Item 2]
-
-**To Buy:**
-
-- 🛍️ [Item 1]
-- 🛍️ [Item 2]
+| | Actual | Target | ✓ |
+|---------|--------|--------|---|
+| 🔥 Cal | [X] | [Target] | ✅ |
+| 🥩 Pro | [X]g | [Target]g | ✅ |
+| 🍞 Carb | [X]g | [Target]g | ✅ |
+| 🧈 Fat | [X]g | [Target]g | ✅ |
 
 ---
 
-## 💚 Health Benefits
+### 🛒 Shopping List
 
-- 🌿 [Benefit 1]
-- 🌿 [Benefit 2]
-- 🌿 [Benefit 3]
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+
+**✅ From Your Fridge:**
+- [Item 1]
+- [Item 2]
+- [Item 3]
+
+**🛍️ To Buy:**
+- [Item 1]
+- [Item 2]
+- [Item 3]
+
+</div>
+
+---
+
+### 💚 Health Benefits
+
+🌿 [Benefit 1] • 🌿 [Benefit 2] • 🌿 [Benefit 3]
 
 ---
 ```
