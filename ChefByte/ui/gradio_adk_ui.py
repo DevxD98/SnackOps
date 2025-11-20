@@ -343,14 +343,26 @@ with gr.Blocks(
     theme=custom_theme,
     css="""
         .gradio-container {max-width: 100% !important; padding: 1rem 2rem;}
-        h1 {font-size: 2.5rem; font-weight: 700; color: #4B5563 !important; margin-bottom: 0.5rem;}
-        h2 {font-size: 1.5rem; font-weight: 600; color: #1F2937 !important; margin-bottom: 1rem;}
-        h3 {font-size: 1.25rem; font-weight: 600; color: #374151 !important;}
-        .markdown p {color: #1F2937 !important;}
+        h1 {font-size: 2.5rem; font-weight: 700; color: #FFFFFF !important; margin-bottom: 0.5rem;}
+        h2 {font-size: 1.5rem; font-weight: 600; color: #F3F4F6 !important; margin-bottom: 1rem;}
+        h3 {font-size: 1.25rem; font-weight: 600; color: #E5E7EB !important;}
+        .markdown p {color: #F9FAFB !important;}
+        .markdown li {color: #F9FAFB !important;}
+        .markdown strong {color: #FFFFFF !important;}
+        .markdown em {color: #E5E7EB !important;}
         .contain {border-radius: 12px;}
         .tabitem {padding: 1.5rem;}
         footer {display: none !important;}
         .ingredient-chip {background: #10B981; color: white; padding: 4px 12px; border-radius: 16px; margin: 2px; display: inline-block;}
+        label {color: #F3F4F6 !important;}
+        .gr-text-input, .gr-textbox {color: #FFFFFF !important;}
+        .message.bot {color: #FFFFFF !important;}
+        .message.bot p {color: #FFFFFF !important;}
+        .message.bot * {color: #FFFFFF !important;}
+        .prose {color: #F9FAFB !important;}
+        .prose p {color: #F9FAFB !important;}
+        .prose li {color: #F9FAFB !important;}
+        .prose strong {color: #FFFFFF !important;}
     """
 ) as demo:
     
@@ -358,9 +370,9 @@ with gr.Blocks(
     with gr.Row():
         with gr.Column(scale=1):
             gr.Markdown("""
-            <h1 style="color: #ffffff; font-weight: 700; font-size: 2.5rem; margin-bottom: 0.5rem;">ChefByte</h1>
-            <h3 style="color: #059669; font-weight: 600; font-size: 1.25rem; margin-bottom: 0.75rem;">AI-Powered Meal Planning Assistant</h3>
-            <p style="color: #ffffff; font-size: 1rem; line-height: 1.5;">Intelligent companion for Indian household meal planning with vision analysis, recipe search, and nutrition tracking.</p>
+            <h1 style="color: #FFFFFF; font-weight: 700; font-size: 2.5rem; margin-bottom: 0.5rem;">ChefByte</h1>
+            <h3 style="color: #10B981; font-weight: 600; font-size: 1.25rem; margin-bottom: 0.75rem;">AI-Powered Meal Planning Assistant</h3>
+            <p style="color: #F9FAFB; font-size: 1rem; line-height: 1.5;">Intelligent companion for Indian household meal planning with vision analysis, recipe search, and nutrition tracking.</p>
             """)
     
     gr.Markdown("---")
@@ -727,8 +739,8 @@ with gr.Blocks(
     
     # Footer
     gr.Markdown("""
-    <div style="text-align: center; padding: 2rem 0 1rem 0; color: #64748b; border-top: 1px solid #e2e8f0; margin-top: 2rem;">
-        <p style="margin: 0; font-size: 0.875rem;">ChefByte © 2025 • Powered by Google ADK & Gemini</p>
+    <div style="text-align: center; padding: 2rem 0 1rem 0; color: #D1D5DB; border-top: 1px solid #4B5563; margin-top: 2rem;">
+        <p style="margin: 0; font-size: 0.875rem; color: #D1D5DB;">ChefByte © 2025 • Powered by Google ADK & Gemini</p>
     </div>
     """)
 
