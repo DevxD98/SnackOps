@@ -1,0 +1,7 @@
+{
+  "name": "ChefByte",
+  "description": "An AI-powered culinary agent that turns your fridge contents and receipts into personalized meal plans.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}

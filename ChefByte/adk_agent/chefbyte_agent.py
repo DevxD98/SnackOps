@@ -16,7 +16,9 @@ from adk_agent.tools import (
     vision_tool,
     recipe_search_tool,
     nutrition_estimator_tool,
-    grocery_list_tool
+    grocery_list_tool,
+    genai_recipe_tool,
+    recipe_variations_tool
 )
 
 # Import persistent memory
@@ -93,13 +95,17 @@ class ChefByteADKAgent:
         from adk_agent.tools.recipe_search_adk import search_recipes
         from adk_agent.tools.nutrition_estimator_adk import estimate_nutrition
         from adk_agent.tools.grocery_list_tool import generate_grocery_list
+        from adk_agent.tools.genai_recipe_tool import generate_recipe
+        from adk_agent.tools.recipe_variations_tool import generate_recipe_variations
         
         # Store function references
         self.tool_functions = {
             'extract_ingredients_from_image': extract_ingredients_from_image,
             'search_recipes': self._enhanced_search_recipes,  # Wrap with enhancement
             'estimate_nutrition': estimate_nutrition,
-            'generate_grocery_list': generate_grocery_list
+            'generate_grocery_list': generate_grocery_list,
+            'generate_recipe': generate_recipe,
+            'generate_recipe_variations': generate_recipe_variations
         }
         
         # Store original search function
@@ -170,6 +176,40 @@ class ChefByteADKAgent:
                                 )
                             },
                             required=['items']
+                        )
+                    )
+                ]
+            ),
+            types.Tool(
+                function_declarations=[
+                    types.FunctionDeclaration(
+                        name='generate_recipe',
+                        description='Generate a creative recipe using GenAI based on ingredients. Use this when user wants something unique or when database search fails.',
+                        parameters=types.Schema(
+                            type=types.Type.OBJECT,
+                            properties={
+                                'ingredients': types.Schema(type=types.Type.ARRAY, items=types.Schema(type=types.Type.STRING), description='List of ingredients'),
+                                'dietary_constraints': types.Schema(type=types.Type.ARRAY, items=types.Schema(type=types.Type.STRING), description='Dietary constraints'),
+                                'cuisine_type': types.Schema(type=types.Type.STRING, description='Preferred cuisine'),
+                                'meal_type': types.Schema(type=types.Type.STRING, description='Meal type (Breakfast, Dinner, etc.)'),
+                                'cooking_time': types.Schema(type=types.Type.STRING, description='Max cooking time')
+                            },
+                            required=['ingredients']
+                        )
+                    ),
+                    types.FunctionDeclaration(
+                        name='generate_recipe_variations',
+                        description='Generate 3 recipe variations in a single call. PREFERRED for recipe requests. More efficient than calling generate_recipe multiple times.',
+                        parameters=types.Schema(
+                            type=types.Type.OBJECT,
+                            properties={
+                                'ingredients': types.Schema(type=types.Type.ARRAY, items=types.Schema(type=types.Type.STRING), description='List of ingredients'),
+                                'dietary_constraints': types.Schema(type=types.Type.ARRAY, items=types.Schema(type=types.Type.STRING), description='Dietary constraints'),
+                                'cuisine_type': types.Schema(type=types.Type.STRING, description='Preferred cuisine'),
+                                'cooking_time': types.Schema(type=types.Type.STRING, description='Max cooking time'),
+                                'servings': types.Schema(type=types.Type.INTEGER, description='Number of servings')
+                            },
+                            required=['ingredients']
                         )
                     )
                 ]
@@ -564,6 +604,142 @@ Please:
         memory_context = self.memory.get_agent_context()
         self.system_instruction = self._enhance_prompt_with_memory(base_prompt, memory_context)
         print(f"✓ Updated dietary preferences: {', '.join(constraints)}")
+    
+    
+    async def analyze_ingredients_agentic(
+        self,
+        ingredients: List[str],
+        preferences: Dict[str, Any],
+        session_id: str = "recipe_session"
+    ) -> Dict[str, Any]:
+        """
+        Agentic method that lets Gemini autonomously decide which tools to use
+        for recipe generation based on ingredients and preferences.
+        
+        This replaces the hardcoded workflow in /analyze-input with true agentic behavior.
+        
+        Args:
+            ingredients: List of available ingredients
+            preferences: Dict with diet, timeLimit, calories, servings
+            session_id: Session identifier for conversation history
+            
+        Returns:
+            Dict with recipes in the exact format expected by the UI
+        """
+        try:
+            # Craft a strategic prompt that guides the agent
+            diet = preferences.get('diet', 'Anything')
+            time_limit = preferences.get('timeLimit', '30 minutes')
+            calories = preferences.get('calories', 500)
+            servings = preferences.get('servings', 2)
+            
+            # Map dietary preferences
+            dietary_constraints = None
+            if diet == 'Vegetarian':
+                dietary_constraints = ['vegetarian']
+            elif diet == 'Vegan':
+                dietary_constraints = ['vegan']
+            elif diet in ['Keto', 'Paleo']:
+                dietary_constraints = [diet.lower()]
+            
+            prompt = f"""
+I have these ingredients: {', '.join(ingredients)}
+
+Please help me by:
+1. Generating 3 different recipe variations using the generate_recipe_variations tool
+2. Make sure the recipes match these preferences:
+   - Diet: {diet}
+   - Time limit: {time_limit}
+   - Target calories per serving: {calories}
+   - Servings: {servings}
+
+Use the generate_recipe_variations tool to create Standard, Creative Twist, and Quick & Easy variations.
+After getting the recipes, provide a brief summary of what you found.
+"""
+            
+            # Use the agent's run_async method for agentic execution
+            print(f"🤖 Agent analyzing ingredients: {ingredients}")
+            result = await self.run_async(prompt, session_id=session_id)
+            
+            # Parse the agent's response and tool calls
+            # The agent should have called generate_recipe_variations
+            recipes_data = []
+            
+            # Check if we have tool call results in the conversation history
+            if session_id in self.conversation_history:
+                history = self.conversation_history[session_id]
+                
+                # Look for function responses in the history
+                for content in reversed(history):
+                    if hasattr(content, 'parts'):
+                        for part in content.parts:
+                            if hasattr(part, 'function_response') and part.function_response is not None:
+                                func_name = part.function_response.name
+                                if func_name == 'generate_recipe_variations':
+                                    # Parse the response
+                                    response_data = dict(part.function_response.response)
+                                    if response_data.get('success'):
+                                        recipes_data = response_data.get('recipes', [])
+                                        print(f"✓ Agent generated {len(recipes_data)} recipes")
+                                        break
+                    if recipes_data:
+                        break
+            
+            # Fallback: If agent didn't call the tool, call it directly
+            if not recipes_data:
+                print("⚠️ Agent didn't call generate_recipe_variations, calling directly as fallback")
+                from adk_agent.tools.recipe_variations_tool import generate_recipe_variations
+                fallback_result = generate_recipe_variations(
+                    ingredients=ingredients,
+                    dietary_constraints=dietary_constraints,
+                    cooking_time=time_limit,
+                    servings=servings
+                )
+                if fallback_result.get('success'):
+                    recipes_data = fallback_result.get('recipes', [])
+            
+            # Format recipes for UI (must match exact schema)
+            formatted_recipes = []
+            for idx, recipe in enumerate(recipes_data[:3]):  # Limit to 3
+                # Ensure all required fields exist
+                formatted_recipes.append({
+                    'id': f"recipe_{idx+1}_{recipe.get('name','').lower().replace(' ','_')}",
+                    'title': recipe.get('name', f'Recipe {idx+1}'),
+                    'description': recipe.get('description', 'A delicious recipe'),
+                    'time': recipe.get('prep_time', time_limit),
+                    'baseServings': servings,
+                    'ingredients': recipe.get('ingredients', []),
+                    'steps': recipe.get('instructions', []),
+                    'nutrition': {
+                        'calories': int(recipe.get('calories', calories)),
+                        'protein': f"{recipe.get('protein_g', 0)}g",
+                        'carbs': f"{recipe.get('carbs_g', 0)}g",
+                        'fats': f"{recipe.get('fat_g', 0)}g"
+                    },
+                    'matchScore': int(recipe.get('match_score', 95))
+                })
+            
+            # Get a concise reasoning (not the full agent response which is verbose)
+            reasoning = f"Generated {len(formatted_recipes)} recipe variations using AI based on your ingredients and preferences."
+            
+            return {
+                'success': True,
+                'recipes': formatted_recipes,
+                'reasoning': reasoning,
+                'detectedIngredients': ingredients
+            }
+            
+        except Exception as e:
+            print(f"❌ Error in analyze_ingredients_agentic: {e}")
+            import traceback
+            traceback.print_exc()
+            return {
+                'success': False,
+                'error': str(e),
+                'recipes': [],
+                'reasoning': f"Error during agentic analysis: {e}",
+                'detectedIngredients': ingredients
+            }
     
     
     def set_calorie_target(self, calories: int) -> None:

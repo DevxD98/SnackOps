@@ -186,7 +186,8 @@ def _score_recipes(
             "carbs_g": recipe.get('carbs_g', 0),
             "fat_g": recipe.get('fat_g', 0),
             "prep_time": recipe.get('prep_time', 'Unknown'),
-            "difficulty": recipe.get('difficulty', 'Medium')
+            "difficulty": recipe.get('difficulty', 'Medium'),
+            "instructions": recipe.get('instructions', '')
         })
     
     return scored_recipes
