@@ -29,6 +29,21 @@ Powered by **Google's Agentic Development Kit (ADK)** and **Gemini 2.5 Flash**, 
 
 ---
 
+## 📸 Interface Showcase
+
+<div align="center">
+  <img src="Chefbyte-ui/readme-pics/dashboard.png" alt="ChefByte Dashboard" width="100%" style="border-radius: 12px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</div>
+
+<div align="center" style="display: flex; gap: 20px; justify-content: center;">
+  <img src="Chefbyte-ui/readme-pics/recipe-card.png" alt="Recipe Card" width="48%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+  <img src="Chefbyte-ui/readme-pics/recipt-card.png" alt="Receipt Scanner" width="48%" style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);" />
+</div>
+
+<br/>
+
+---
+
 ## Key Features
 
 ### 1. Agentic Intelligence
