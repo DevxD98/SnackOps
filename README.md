@@ -161,25 +161,31 @@ Open **http://localhost:3000** and start cooking! 👨‍🍳
 
 ## Contributors
 
-<div align="left">
-  <a href="https://github.com/DevxD98">
-    <img src="https://github.com/DevxD98.png" width="50" height="50" style="border-radius: 50%;" alt="DevxD98"/>
-    <br />
-    <sub><b>DevxD98</b></sub>
-  </a>
-  &nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/itzAditya0">
-    <img src="https://github.com/itzAditya0.png" width="50" height="50" style="border-radius: 50%;" alt="itzAditya0"/>
-    <br />
-    <sub><b>itzAditya0</b></sub>
-  </a>
-  &nbsp;&nbsp;&nbsp;
-  <a href="https://github.com/ojasvi0407">
-    <img src="https://github.com/ojasvi0407.png" width="50" height="50" style="border-radius: 50%;" alt="ojasvi0407"/>
-    <br />
-    <sub><b>ojasvi0407</b></sub>
-  </a>
-</div>
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/DevxD98">
+        <img src="https://images.weserv.nl/?url=github.com/DevxD98.png&h=100&w=100&fit=cover&mask=circle&maxage=7d" width="100px;" alt="DevxD98"/>
+        <br />
+        <sub><b>DevxD98</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/itzAditya0">
+        <img src="https://images.weserv.nl/?url=github.com/itzAditya0.png&h=100&w=100&fit=cover&mask=circle&maxage=7d" width="100px;" alt="itzAditya0"/>
+        <br />
+        <sub><b>itzAditya0</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/ojasvi0407">
+        <img src="https://images.weserv.nl/?url=github.com/ojasvi0407.png&h=100&w=100&fit=cover&mask=circle&maxage=7d" width="100px;" alt="ojasvi0407"/>
+        <br />
+        <sub><b>ojasvi0407</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
 
 ---
 
