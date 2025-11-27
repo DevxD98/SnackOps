@@ -29,31 +29,31 @@ Powered by **Google's Agentic Development Kit (ADK)** and **Gemini 2.5 Flash**, 
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 1. **Agentic Intelligence** 🧠
+### 1. Agentic Intelligence
 ChefByte isn't a chatbot. It's an agent.
 - **Autonomous Tool Selection**: It decides when to use vision, when to search, and when to generate variations.
 - **Strategic Reasoning**: It explains *why* it chose specific recipes based on your ingredients.
 - **Fallback Mechanisms**: Robust error handling ensures you always get a result.
 
-### 2. **Multi-Modal Vision** 👁️
+### 2. Multi-Modal Vision
 - **Fridge Scanner**: Identify ingredients from a messy fridge photo.
 - **Receipt Digitizer**: Extract items, prices, and store details from grocery receipts.
 - **Auto-Detection**: The system automatically figures out if you uploaded a fridge photo or a receipt.
 
-### 3. **Smart Recipe Generation** 🍽️
+### 3. Smart Recipe Generation
 Get 3 distinct variations for every request:
 - **Standard**: A classic, well-balanced meal.
 - **Creative Twist**: A fusion or innovative take on the ingredients.
 - **Quick & Easy**: A simplified version for busy days.
 
-### 4. **Nutrition & Health** 🥗
+### 4. Nutrition & Health
 - **Macro Tracking**: Calories, Protein, Carbs, and Fats calculated for every recipe.
 - **Dietary Filters**: Vegetarian, Vegan, Keto, Paleo, and more.
 - **Portion Scaling**: Adjust servings and watch ingredient quantities update instantly.
 
-### 5. **Persistent Memory** 💾
+### 5. Persistent Memory
 - **Inventory Tracking**: Remembers what's in your kitchen.
 - **Recipe History**: Access your past generations anytime.
 - **User Preferences**: Remembers your diet and calorie goals.
@@ -159,25 +159,37 @@ Open **http://localhost:3000** and start cooking! 👨‍🍳
 
 ---
 
-## 🤝 Contributing
+## Contributors
 
-ChefByte is an open-source project exploring the future of agentic AI.
-
-1. Fork the repo
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+<div align="left">
+  <a href="https://github.com/DevxD98">
+    <img src="https://github.com/DevxD98.png" width="50" height="50" style="border-radius: 50%;" alt="DevxD98"/>
+    <br />
+    <sub><b>DevxD98</b></sub>
+  </a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/itzAditya0">
+    <img src="https://github.com/itzAditya0.png" width="50" height="50" style="border-radius: 50%;" alt="itzAditya0"/>
+    <br />
+    <sub><b>itzAditya0</b></sub>
+  </a>
+  &nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/ojasvi0407">
+    <img src="https://github.com/ojasvi0407.png" width="50" height="50" style="border-radius: 50%;" alt="ojasvi0407"/>
+    <br />
+    <sub><b>ojasvi0407</b></sub>
+  </a>
+</div>
 
 ---
 
-## 📄 License
+## License
 
 MIT License - See [LICENSE](LICENSE) file for details.
 
 ---
 
 <div align="center">
-  <h3>Made with ❤️ for Modern Kitchens</h3>
+  <h3>Made for Modern Kitchens</h3>
   <p>ChefByte - Your AI Sous Chef</p>
 </div>
