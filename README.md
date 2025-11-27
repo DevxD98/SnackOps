@@ -29,6 +29,49 @@ Powered by **Google's Agentic Development Kit (ADK)** and **Gemini 2.5 Flash**, 
 
 ---
 
+## Why ChefByte?
+
+### The Problem
+Modern households struggle with three daily questions:
+1. "What's in my fridge?"
+2. "What can I cook with this?"
+3. "How do I make it healthy?"
+
+Traditional recipe apps are static databases. They don't know your inventory, your dietary needs, or your cooking style.
+
+### Our Solution
+We built ChefByte to be an **active kitchen companion**, not a passive database. By leveraging **Agentic AI**, ChefByte understands context. It sees your ingredients, reads your receipts, and thinks like a chef to create personalized meal plans that reduce food waste and decision fatigue.
+
+### Why You Should Use It
+- **Reduce Food Waste**: Instantly find recipes for ingredients about to expire.
+- **Save Money**: Digitizing receipts helps you track inventory and avoid overbuying.
+- **Eat Healthier**: Automatic macro tracking ensures you meet your nutrition goals.
+- **Save Time**: Stop scrolling through recipe blogs. Get 3 perfect options in seconds.
+
+---
+
+## Compatibility
+
+![macOS](https://img.shields.io/badge/macOS-Supported-000000?style=for-the-badge&logo=apple&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-Supported-0078D6?style=for-the-badge&logo=windows&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-Supported-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+
+ChefByte is designed to run locally on your machine for maximum privacy and performance.
+
+| OS | Status | Notes |
+| :--- | :--- | :--- |
+| **macOS** | ✅ Verified | Native support (Apple Silicon & Intel) |
+| **Windows** | ✅ Verified | Supports WSL2 and PowerShell |
+| **Linux** | ✅ Verified | Ubuntu, Debian, Fedora, Arch |
+
+**Requirements:**
+- **RAM**: 4GB minimum (8GB recommended)
+- **Python**: 3.12 or higher
+- **Node.js**: v18 or higher
+- **Internet**: Required for Gemini API access
+
+---
+
 ## 📸 Interface Showcase
 
 <div align="center">
@@ -105,6 +148,32 @@ graph TD
 - **Vision Tool**: Unified tool for processing both fridge photos and receipts.
 - **Recipe Variations Tool**: Generates 3 distinct recipe types in a single optimized call.
 - **Persistent Memory**: JSON-based storage for user context and history.
+
+---
+
+## 📂 Project Structure
+
+The project is organized into two main components: a **FastAPI Backend** and a **React Frontend**.
+
+```plaintext
+SnackOps/
+├── ChefByte/                 # 🐍 Backend (FastAPI + Agentic Core)
+│   ├── adk_agent/            #    - Agent Logic & Tools
+│   │   ├── tools/            #      - Vision, Search, Variations
+│   │   └── chefbyte_agent.py #      - Main Agent Orchestrator
+│   ├── data/                 #    - Recipe Databases & Memory
+│   ├── api.py                #    - FastAPI Endpoints
+│   └── start_backend.sh      #    - Startup Script
+│
+├── Chefbyte-ui/              # ⚛️ Frontend (React + Vite)
+│   ├── src/
+│   │   ├── components/       #    - Reusable UI Components
+│   │   ├── services/         #    - API Integration
+│   │   └── App.tsx           #    - Main Application
+│   └── start_frontend.sh     #    - Startup Script
+│
+└── README.md                 # 📄 Documentation
+```
 
 ---
 
