@@ -188,12 +188,20 @@ async def analyze_input(request: AnalyzeInputRequest):
                 tmp.write(base64.b64decode(image_data))
                 tmp_path = tmp.name
             try:
-                vision_result = extract_ingredients_from_image(tmp_path, image_type="fridge")
+                # Use unified vision tool (handles both fridge and receipt)
+                vision_result = extract_ingredients_from_image(tmp_path, image_type="auto")
+                
                 if vision_result.get('success'):
+                    # Extract ingredients
                     for item in vision_result.get('ingredients', []):
                         name = item.get('name') if isinstance(item, dict) else item
                         if name:
                             detected_ingredients.append(name.strip())
+                    
+                    # Extract receipt data if present
+                    if vision_result.get('receipt_data'):
+                        receipt_data = vision_result.get('receipt_data')
+                        print(f"🧾 Detected Receipt: {receipt_data.get('storeName')} - {receipt_data.get('total')}")
             finally:
                 os.remove(tmp_path)
         else:

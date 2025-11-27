@@ -36,11 +36,8 @@ def extract_ingredients_from_image(image_path: str, image_type: str = "fridge") 
         # Get Gemini Vision model
         model = get_vision_model()
         
-        # Create appropriate prompt based on image type
-        if image_type == "receipt":
-            prompt = _get_receipt_prompt()
-        else:
-            prompt = _get_fridge_prompt()
+        # Create a unified prompt that handles both cases
+        prompt = _get_unified_prompt()
         
         # Generate response using Gemini Vision
         response = model.generate_content([prompt, img])
@@ -48,12 +45,20 @@ def extract_ingredients_from_image(image_path: str, image_type: str = "fridge") 
         # Parse the response
         result = _parse_response(response.text)
         
+        # Determine image type from result if possible
+        detected_type = result.get("detected_type", image_type)
+        
         return {
             "success": True,
             "ingredients": result.get("ingredients", []),
             "confidence": result.get("confidence", "medium"),
             "summary": result.get("summary", ""),
-            "image_type": image_type
+            "image_type": detected_type,
+            "receipt_data": {
+                "storeName": result.get("store_name"),
+                "date": result.get("date"),
+                "total": result.get("total_amount")
+            } if detected_type == "receipt" else None
         }
         
     except Exception as e:
@@ -64,71 +69,50 @@ def extract_ingredients_from_image(image_path: str, image_type: str = "fridge") 
         }
 
 
-def _get_fridge_prompt() -> str:
-    """Get prompt for fridge/pantry analysis"""
+def _get_unified_prompt() -> str:
+    """Get a unified prompt that can handle both fridge photos and receipts"""
     return """
-You are analyzing a photo of a refrigerator or pantry. 
-Identify ALL visible food items and ingredients with precision.
+You are an advanced AI food analyzer. Analyze the provided image, which could be either a **Fridge/Pantry Photo** OR a **Grocery Receipt**.
 
-For each item, extract:
-1. Ingredient name (use common English names)
-2. Approximate quantity (if visible or estimatable)
-3. Condition (fresh, good, wilted, expired, etc.)
-4. Confidence level (high, medium, low)
+First, determine the image type.
 
-Special considerations for Indian ingredients:
-- Identify spices, dals, flours correctly
-- Recognize Indian vegetables (karela, bhindi, turai, etc.)
-- Identify Indian dairy products (paneer, dahi, etc.)
+### IF IT IS A RECEIPT:
+Extract the following details:
+1. **Store Name**: The name of the store/merchant.
+2. **Date**: The date of purchase (YYYY-MM-DD format if possible).
+3. **Total Amount**: The final total price paid.
+4. **Items**: List of all purchased items.
+   - Name: Normalize to standard English ingredient names.
+   - Quantity: Amount/weight if visible.
+   - Price: Price of the item.
 
-Return ONLY a JSON object with this format:
+### IF IT IS A FRIDGE/PANTRY PHOTO:
+Identify ALL visible food items/ingredients.
+1. **Ingredients**: List of all items.
+   - Name: Standard English name (handle Indian ingredients like 'bhindi', 'paneer' correctly).
+   - Quantity: Approximate amount visible.
+   - Condition: Fresh, good, etc.
+
+### RETURN FORMAT (JSON ONLY):
 {
+    "detected_type": "receipt" OR "fridge",
+    "store_name": "Store Name (if receipt)",
+    "date": "Date (if receipt)",
+    "total_amount": "Total (if receipt)",
     "ingredients": [
         {
-            "name": "ingredient_name",
-            "quantity": "approximate_amount",
-            "condition": "fresh/good/wilted/etc",
+            "name": "Item Name",
+            "quantity": "Qty",
+            "price": "Price (if receipt)",
+            "condition": "Condition (if fridge)",
             "confidence": "high/medium/low"
         }
     ],
-    "confidence": "overall_confidence_level",
-    "summary": "brief_text_summary"
+    "confidence": "overall_confidence",
+    "summary": "Brief summary of what was detected"
 }
 
-Be thorough but accurate. If unsure about an item, mark confidence as low.
-"""
-
-
-def _get_receipt_prompt() -> str:
-    """Get prompt for receipt OCR and parsing"""
-    return """
-You are analyzing a grocery receipt image.
-Extract ALL purchased items with their quantities and prices.
-
-For each item, extract:
-1. Item name
-2. Quantity (number and unit)
-3. Price (if visible)
-
-Normalize ingredient names to standard English terms.
-Handle Indian ingredient names (both Hindi and English).
-
-Return ONLY a JSON object with this format:
-{
-    "ingredients": [
-        {
-            "name": "ingredient_name",
-            "quantity": "amount with unit",
-            "price": "price_if_available",
-            "confidence": "high/medium/low"
-        }
-    ],
-    "total_amount": "total_price_if_visible",
-    "confidence": "overall_confidence_level",
-    "summary": "brief_summary_of_purchase"
-}
-
-Be precise with quantities and units (kg, grams, liters, pieces, etc.).
+Be precise and thorough. If it's a receipt, the 'ingredients' list should contain the purchased items.
 """
 
 
